@@ -36,6 +36,7 @@ const ZONES = [
   { key: "duur",     name: "Rustige duurloop",       pace: "7:00–7:45", info: "RPE 3-4 · praten moet makkelijk kunnen" },
   { key: "lang",     name: "Lange duurloop",         pace: "7:00–7:45", info: "RPE 3-5 · bouwt rustig naar de 21,1 km" },
   { key: "tempo",    name: "Tempoblok",               pace: "6:15–6:40", info: "RPE 6 · comfortabel oncomfortabel" },
+  { key: "tienkm",   name: "10 km-tempo",             pace: "5:25–5:40", info: "RPE 7 · korte, beheerste blokken richting sub-55" },
   { key: "doel",     name: "HM-tempo",                pace: "≈ 6:50–7:10", info: "RPE 5-6 · het tempo dat je de hele 21,1 km volhoudt" },
 ];
 const zoneByKey = Object.fromEntries(ZONES.map((z) => [z.key, z]));
@@ -89,6 +90,13 @@ const COACH = {
     "Niet jagen tot je verzuurt — vlot en in balans.",
     "Voel je sterker worden, strijder. Houd 'm beheerst.",
   ],
+  tienkm: [
+    "Richting 5:30/km, strijder. Beheerst snel is vandaag precies goed.",
+    "Bart pakt straks het tempo; jij leert nu hoe sub-55 hoort te voelen.",
+    "Vlot, ontspannen en technisch netjes. Geen sprint, wel focus.",
+    "Maak de snelle blokken gelijkmatig. De laatste mag niet de zwaarste zijn.",
+    "Maastunnelloop in zicht — vertrouwen verzamelen, niet forceren.",
+  ],
   doel: [
     "HM-tempo, strijder. Onthoud goed hoe dit voelt voor je race.",
     "Dit is je wedstrijdritme. Vertrouw op je benen, strijder.",
@@ -120,6 +128,7 @@ const WHY = {
   duur:     "Rustige duurlopen bouwen je aerobe motor: sterker hart, meer haarvaten en betere vetverbranding. Het grootste deel van je trainingstijd hoort hier rustig te zijn — zo kun je vaker en blessurevrij trainen.",
   lang:     "De lange duurloop traint je uithoudingsvermogen en de gewenning aan tijd op de benen. Je leert energie sparen en mentaal doorzetten — de basis onder een sterke halve marathon.",
   tempo:    "Tempoblokken liggen rond je omslagpunt. Je leert vlotter lopen zónder te verzuren, zodat lopen op een steviger tempo straks minder zwaar voelt.",
+  tienkm:   "Deze korte blokken laten je gecontroleerd wennen aan ongeveer 5:30 per kilometer, het ritme voor een 10 kilometer onder de 55 minuten. De herstelpauzes houden de kwaliteit hoog zonder dat deze tussendoelrace je halve-marathonopbouw overneemt.",
   doel:     "Lopen op je halve-marathontempo maakt dat tempo vertrouwd. Op de racedag in Maassluis voelt het dan als thuiskomen in plaats van een gok.",
 };
 
@@ -185,70 +194,71 @@ const PLAN = [
     za({ zone: "herstel", min: 38, title: "38 min ontspannen", goal: "Herstel, geen tempo", blocks: ["38 min ontspannen, geen tempo"] }),
   ]},
   { week: 13, dates: "28 sep–4 okt", phase: "Fase 2 · Duur opbouwen", sessions: [
-    wo({ zone: "duur", min: 36, title: "36 min rustige duurloop", goal: "Volume", blocks: ["5 min inlopen", "26 min duurloop, RPE 3-4", "5 min uitlopen"] }),
+    wo({ zone: "duur", min: 36, title: "Rustig + 6 korte versnellingen", goal: "Soepele snelheid voorbereiden richting de Maastunnelloop", blocks: ["25 min rustige duurloop, RPE 3-4", "6×20 sec soepel versnellen, ruim onder sprinttempo", "Steeds 60 sec rustig dribbelen", "Rustig uitlopen"] }),
     za({ zone: "lang", min: 56, title: "56 min lange duurloop", goal: "Duur vasthouden", blocks: ["56 min rustig, RPE 3-4"] }),
   ]},
   { week: 14, dates: "5–11 okt", phase: "Fase 2 · Duur opbouwen", sessions: [
-    wo({ zone: "duur", min: 38, title: "38 min rustige duurloop", goal: "Volume", blocks: ["5 min inlopen", "28 min duurloop, RPE 3-4", "5 min uitlopen"] }),
+    wo({ zone: "tempo", min: 40, title: "5×3 min richting 10 km-tempo", goal: "Eerste gecontroleerde stap richting sub-55", blocks: ["10 min rustig inlopen", "5×3 min op 5:50–6:00/km, RPE 6", "2 min rustig dribbelen tussen de blokken", "Rustig uitlopen"] }),
     za({ zone: "lang", min: 60, title: "🎉 Eerste uur hardlopen!", goal: "Mijlpaal: 60 minuten aan één stuk", blocks: ["60 min rustig, RPE 3-4", "Mooi keerpunt richting de halve marathon"] }),
   ]},
 
-  /* ---- Fase 3 · Specifiek richting de Halve ---- */
-  { week: 15, dates: "12–18 okt", phase: "Fase 3 · Specifiek richting de Halve", sessions: [
-    wo({ zone: "tempo", min: 35, title: "Eerste tempoblokken", goal: "Voorzichtig kennismaken met een vlotter tempo", blocks: ["10 min inlopen", "3×5 min steady, RPE 6", "3 min rustig ertussen", "uitlopen"] }),
+  /* ---- Fase 3 · Naar sub-55 in de Maastunnelloop ---- */
+  { week: 15, dates: "12–18 okt", phase: "Fase 3 · Naar sub-55 in de Maastunnelloop", sessions: [
+    wo({ zone: "tienkm", min: 42, title: "4×4 min richting sub-55", goal: "Het 10 km-ritme stap voor stap benaderen", blocks: ["10 min rustig inlopen", "4×4 min op 5:40–5:45/km, RPE 6-7", "2,5 min rustig dribbelen tussen de blokken", "Rustig uitlopen"] }),
     za({ zone: "lang", min: 65, title: "65 min lange duurloop", goal: "Duur uitbouwen", blocks: ["65 min rustig, RPE 3-5"] }),
   ]},
-  { week: 16, dates: "19–25 okt", phase: "Fase 3 · Specifiek richting de Halve", recovery: true, sessions: [
-    wo({ zone: "herstel", min: 26, title: "26 min heel rustig", goal: "Herstelweek", blocks: ["26 min heel rustig, RPE 2-3"] }),
+  { week: 16, dates: "19–25 okt", phase: "Fase 3 · Naar sub-55 in de Maastunnelloop", recovery: true, sessions: [
+    wo({ zone: "herstel", min: 30, title: "Herstel + 4 ontspannen strides", goal: "Herstellen en het loopgevoel fris houden", blocks: ["24 min heel rustig, RPE 2-3", "4×20 sec ontspannen versnellen", "Steeds volledig rustig herstellen"] }),
     za({ zone: "herstel", min: 48, title: "48 min ontspannen", goal: "Herstel, geen tempo", blocks: ["48 min ontspannen, geen tempo"] }),
   ]},
-  { week: 17, dates: "26 okt–1 nov", phase: "Fase 3 · Specifiek richting de Halve", sessions: [
-    wo({ zone: "tempo", min: 38, title: "3×6 min tempoblok", goal: "Drempelgevoel", blocks: ["10 min inlopen", "3×6 min steady, RPE 6", "3 min rustig ertussen", "uitlopen"] }),
-    za({ zone: "lang", min: 75, title: "75 min lange duurloop", goal: "Langste tot nu toe", blocks: ["75 min rustig, RPE 3-5"] }),
+  { week: 17, dates: "26 okt–1 nov", phase: "Fase 3 · Naar sub-55 in de Maastunnelloop", sessions: [
+    wo({ zone: "tienkm", min: 45, title: "3×1 km op beoogd 10 km-tempo", goal: "5:30/km gecontroleerd leren vasthouden", blocks: ["12 min rustig inlopen", "3×1 km op 5:30–5:35/km, RPE 7", "3 min rustig dribbelen tussen de kilometers", "10 min rustig uitlopen", "Stop het snelle werk als de loopvorm inzakt"] }),
+    za({ zone: "lang", min: 65, title: "65 min rustige duurloop", goal: "Duur onderhouden zonder vermoeid de raceweek in te gaan", blocks: ["65 min rustig, RPE 3-4", "Geen snelle finale — frisheid gaat voor"] }),
   ]},
-  { week: 18, dates: "2–8 nov", phase: "Fase 3 · Specifiek richting de Halve", sessions: [
-    wo({ zone: "tempo", min: 38, title: "4×5 min tempoblok", goal: "Drempelgevoel", blocks: ["10 min inlopen", "4×5 min steady, RPE 6", "2,5 min rustig ertussen", "uitlopen"] }),
-    za({ zone: "lang", min: 82, title: "82 min lange duurloop", goal: "Duur uitbouwen", blocks: ["82 min rustig, RPE 3-5", "Gel of iets kleins oefenen na ~45 min"] }),
+  { week: 18, dates: "2–8 nov", phase: "Fase 3 · Naar sub-55 in de Maastunnelloop", tuneup: true, sessions: [
+    wo({ zone: "duur", min: 28, title: "Raceweek: loslopen + 4 prikkels", goal: "Frisse benen met even het wedstrijdritme voelen", blocks: ["18 min heel rustig, RPE 3", "4×1 min op ongeveer 5:30/km", "Steeds 90 sec heel rustig dribbelen", "Kort uitlopen — stop terwijl het makkelijk voelt"] }),
+    zo({ zone: "tienkm", min: 75, title: "🏁 Maastunnelloop · 10 km", goal: "Met Bart als pacer richting sub-55", kind: "Tussendoelrace", blocks: ["10–12 min rustig inlopen en een paar korte versnellingen", "Km 1–2: gecontroleerd op circa 5:32/km", "Km 3–8: samen met Bart zo vlak mogelijk rond 5:28–5:30/km", "Km 9–10: op gevoel versnellen als er nog ruimte is", "Doel: onder 55:00, maar een sterke gelijkmatige race gaat voor", "10 min rustig uitlopen en goed herstellen"] }),
   ]},
-  { week: 19, dates: "9–15 nov", phase: "Fase 3 · Specifiek richting de Halve", sessions: [
-    wo({ zone: "tempo", min: 40, title: "3×8 min tempoblok", goal: "Drempelgevoel", blocks: ["10 min inlopen", "3×8 min steady, RPE 6", "3 min rustig ertussen", "uitlopen"] }),
-    za({ zone: "lang", min: 90, title: "🎉 Anderhalf uur!", goal: "Langste duurloop tot nu toe", blocks: ["90 min rustig, RPE 3-5", "Verdeel je krachten"] }),
+  /* ---- Fase 4 · Van 10 km naar de Halve ---- */
+  { week: 19, dates: "9–15 nov", phase: "Fase 4 · Van 10 km naar de Halve", recovery: true, sessions: [
+    wo({ zone: "herstel", min: 30, title: "Herstel na de Maastunnelloop", goal: "De 10 km verwerken", blocks: ["30 min heel rustig, RPE 2-3", "Wandelen of een extra rustdag mag als de benen nog zwaar zijn"] }),
+    za({ zone: "lang", min: 65, title: "65 min ontspannen duurloop", goal: "Rustig terug naar de halve-marathonopbouw", blocks: ["65 min rustig, RPE 3-4", "Geen tempo — alleen soepel minuten maken"] }),
   ]},
-  { week: 20, dates: "16–22 nov", phase: "Fase 3 · Specifiek richting de Halve", recovery: true, sessions: [
-    wo({ zone: "herstel", min: 28, title: "28 min heel rustig", goal: "Herstelweek", blocks: ["28 min heel rustig, RPE 2-3"] }),
-    za({ zone: "herstel", min: 55, title: "55 min ontspannen", goal: "Herstel, geen tempo", blocks: ["55 min ontspannen, geen tempo"] }),
+  { week: 20, dates: "16–22 nov", phase: "Fase 4 · Van 10 km naar de Halve", sessions: [
+    wo({ zone: "duur", min: 38, title: "38 min progressieve duurloop", goal: "De focus terug naar duur en halve marathon", blocks: ["10 min heel rustig", "18 min rustige duurloop, RPE 3-4", "10 min steady, RPE 5", "Niet terug naar 10 km-tempo"] }),
+    za({ zone: "lang", min: 90, title: "🎉 Anderhalf uur!", goal: "Langste duurloop tot nu toe", blocks: ["90 min rustig, RPE 3-5", "Verdeel je krachten en oefen drinken"] }),
   ]},
-  { week: 21, dates: "23–29 nov", phase: "Fase 3 · Specifiek richting de Halve", sessions: [
+  { week: 21, dates: "23–29 nov", phase: "Fase 4 · Van 10 km naar de Halve", sessions: [
     wo({ zone: "doel", min: 40, title: "Eerste stukken op HM-tempo", goal: "Wennen aan het tempo dat je straks de hele 21,1 km volhoudt", blocks: ["10 min inlopen", "2×10 min op HM-gevoel, RPE 5-6", "4 min rustig ertussen", "uitlopen"] }),
     za({ zone: "lang", min: 100, title: "100 min lange duurloop", goal: "Duur uitbouwen", blocks: ["100 min rustig, RPE 3-5"] }),
   ]},
-  { week: 22, dates: "30 nov–6 dec", phase: "Fase 3 · Specifiek richting de Halve", sessions: [
+  { week: 22, dates: "30 nov–6 dec", phase: "Fase 4 · Van 10 km naar de Halve", sessions: [
     wo({ zone: "doel", min: 40, title: "2×12 min op HM-tempo", goal: "HM-ritme voelen", blocks: ["10 min inlopen", "2×12 min op HM-gevoel, RPE 5-6", "4 min rustig ertussen", "uitlopen"] }),
     za({ zone: "lang", min: 108, title: "108 min lange duurloop", goal: "Duur uitbouwen", blocks: ["108 min rustig, RPE 3-5"] }),
   ]},
 
-  /* ---- Fase 4 · Piek, taper & race ---- */
-  { week: 23, dates: "7–13 dec", phase: "Fase 4 · Piek, taper & race", sessions: [
+  /* ---- Fase 5 · Piek, taper & race ---- */
+  { week: 23, dates: "7–13 dec", phase: "Fase 5 · Piek, taper & race", sessions: [
     wo({ zone: "doel", min: 35, title: "3×8 min op HM-tempo", goal: "HM-ritme voelen", blocks: ["10 min inlopen", "3×8 min op HM-gevoel, RPE 5-6", "3 min rustig ertussen", "uitlopen"] }),
     za({ zone: "lang", min: 120, title: "🎉 Twee uur!", goal: "Piekmoment nummer 1", blocks: ["120 min rustig, RPE 3-5", "Oefen precies wat je op de racedag eet en drinkt"] }),
   ]},
-  { week: 24, dates: "14–20 dec", phase: "Fase 4 · Piek, taper & race", recovery: true, sessions: [
+  { week: 24, dates: "14–20 dec", phase: "Fase 5 · Piek, taper & race", recovery: true, sessions: [
     wo({ zone: "herstel", min: 28, title: "28 min heel rustig", goal: "Herstelweek", blocks: ["28 min heel rustig, RPE 2-3"] }),
     za({ zone: "herstel", min: 75, title: "75 min ontspannen", goal: "Even bijkomen na de piekweek", blocks: ["75 min ontspannen, geen tempo"] }),
   ]},
-  { week: 25, dates: "21–27 dec", phase: "Fase 4 · Piek, taper & race", sessions: [
+  { week: 25, dates: "21–27 dec", phase: "Fase 5 · Piek, taper & race", sessions: [
     wo({ zone: "doel", min: 35, title: "3×8 min op HM-tempo", goal: "HM-ritme voelen", blocks: ["10 min inlopen", "3×8 min op HM-gevoel, RPE 5-6", "3 min rustig ertussen", "uitlopen"] }),
     za({ zone: "lang", min: 130, title: "🎉 Piek-duurloop: langste training van het schema", goal: "Hierna gaat het volume omlaag richting de wedstrijd", blocks: ["130 min rustig, RPE 3-5"] }),
   ]},
-  { week: 26, dates: "28 dec–3 jan", phase: "Fase 4 · Piek, taper & race", taper: true, sessions: [
+  { week: 26, dates: "28 dec–3 jan", phase: "Fase 5 · Piek, taper & race", taper: true, sessions: [
     wo({ zone: "duur", min: 25, title: "25 min rustig", goal: "Taper start", blocks: ["25 min rustig, RPE 3-4", "Dagen rond de jaarwisseling — verzet gerust als het beter uitkomt"] }),
     za({ zone: "lang", min: 70, title: "70 min rustig", goal: "Omvang omlaag", blocks: ["70 min rustig, RPE 3-4"] }),
   ]},
-  { week: 27, dates: "4–10 jan", phase: "Fase 4 · Piek, taper & race", taper: true, sessions: [
+  { week: 27, dates: "4–10 jan", phase: "Fase 5 · Piek, taper & race", taper: true, sessions: [
     wo({ zone: "duur", min: 20, title: "20 min rustig", goal: "Benen licht houden", blocks: ["20 min rustig, RPE 3"] }),
     za({ zone: "lang", min: 40, title: "40 min soepel", goal: "Kort en fris, vertrouwen opbouwen", blocks: ["40 min soepel, RPE 3"] }),
   ]},
-  { week: 28, dates: "11–17 jan", phase: "Fase 4 · Piek, taper & race", taper: true, race: true, sessions: [
+  { week: 28, dates: "11–17 jan", phase: "Fase 5 · Piek, taper & race", taper: true, race: true, sessions: [
     wo({ zone: "duur", min: 15, title: "Laatste losse loop voor de race", goal: "Benen los, hoofd rustig", blocks: ["15 min heel soepel, RPE 2-3", "Niets meer bewijzen — je hebt het werk al gedaan"] }),
     zo({ zone: "doel", min: 150, title: "🏁 Halve Maassluis", goal: "Doelrace · 21,1 km uitlopen", kind: "Doelrace", blocks: ["Eerste paar kilometer bewust rustig starten", "Zoek daarna je eigen duurzame ritme, RPE 5-6", "Geniet van het publiek in Maassluis", "Laatste kilometers op gevoel — en trots zijn op wat je hebt opgebouwd"] }),
   ]},
@@ -273,6 +283,13 @@ const INFO = [
     "2–3 uur voor een lange duurloop een koolhydraatrijke maaltijd.",
     "Na afloop binnen 1–2 uur eiwit + koolhydraten.",
   ]},
+  { icon: "🌉", title: "Maastunnelloop · samen naar sub-55", items: [
+    "De opbouw in week 13–17 gaat van korte strides naar 3×1 km rond 5:30/km.",
+    "Raceweek: woensdag alleen kort loslopen met vier rustige tempo-prikkels.",
+    "Bart bepaalt het tempo: gecontroleerd openen en daarna zo vlak mogelijk rond 5:28–5:30/km.",
+    "Sub-55 is het doel, maar een sterke gelijkmatige 10 km zonder forceren is altijd winst.",
+    "Week 19 is bewust herstel; daarna verschuift de focus weer volledig naar de halve marathon.",
+  ]},
   { icon: "🎯", title: "Taper & racedag Maassluis", items: [
     "Week 26–28: omvang flink omlaag, je moet je bijna té fris voelen.",
     "De Halve Maassluis is op zondag 17 januari 2027 — woensdag ervoor is alleen een korte losloop.",
@@ -289,6 +306,8 @@ const BADGES = [
   { id: "week",   icon: "✅",  name: "Week compleet",     desc: "Een hele week afgerond",       test: (s) => s.fullWeeks >= 1 },
   { id: "long",   icon: "🏔️", name: "Lange loper",       desc: "≥ 90 min gelopen",             test: (s) => s.maxTime >= 90 * 60 },
   { id: "fast",   icon: "💨",  name: "Snelle benen",      desc: "Een run onder 7:00/km",        test: (s) => s.bestPace > 0 && s.bestPace < 420 },
+  { id: "tunnel", icon: "🌉",  name: "Tunneltemmer",      desc: "Maastunnelloop voltooid",      test: (s) => s.tenKDone },
+  { id: "sub55",  icon: "⏱️", name: "Sub-55",            desc: "10 km onder 55:00",            test: (s) => s.tenKSub55 },
   { id: "streak", icon: "🔥",  name: "On fire",           desc: "Reeks van 5 trainingen",       test: (s) => s.streak >= 5 },
   { id: "finish", icon: "🏅",  name: "Finisher",          desc: "Halve marathon voltooid",      test: (s) => s.raceDone },
 ];
@@ -306,14 +325,41 @@ let log = loadLog();
 const sid = (week, day) => `w${week}-${day}`;
 const flatSessions = PLAN.flatMap((w) => w.sessions.map((s) => ({ ...s, week: w.week })));
 const totalSessions = flatSessions.length;
+const DAY_OFFSET = { ma: 0, di: 1, wo: 2, do: 3, vr: 4, za: 5, zo: 6 };
 
-function autoTime(raw) {
-  const digits = String(raw).replace(/\D/g, "").slice(0, 6);
-  if (digits.length <= 2) return digits;
-  const parts = []; let s = digits;
-  while (s.length > 2) { parts.unshift(s.slice(-2)); s = s.slice(0, -2); }
-  parts.unshift(s);
-  return parts.join(":");
+const escapeHtml = (value = "") => String(value)
+  .replaceAll("&", "&amp;")
+  .replaceAll("<", "&lt;")
+  .replaceAll(">", "&gt;")
+  .replaceAll('"', "&quot;")
+  .replaceAll("'", "&#039;");
+
+function dateAtDay(dayIndex) {
+  const date = new Date(START_DATE);
+  date.setDate(date.getDate() + dayIndex);
+  date.setHours(12, 0, 0, 0);
+  return date;
+}
+
+function sessionDate(week, day) {
+  return dateAtDay((week - 1) * 7 + (DAY_OFFSET[day] ?? 0));
+}
+
+function isoDate(date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
+function planningEntries() {
+  return Array.isArray(log.__planning) ? log.__planning : [];
+}
+
+function planningForWeek(week) {
+  const start = isoDate(dateAtDay((week - 1) * 7));
+  const end = isoDate(dateAtDay((week - 1) * 7 + 6));
+  return planningEntries().filter((entry) => entry.start <= end && (entry.end || entry.start) >= start);
 }
 
 function parseTime(str) {
@@ -323,6 +369,17 @@ function parseTime(str) {
   if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
   if (parts.length === 2) return parts[0] * 60 + parts[1];
   return parts[0] * 60;
+}
+
+function durationParts(str) {
+  const total = parseTime(str) || 0;
+  return { minutes: Math.floor(total / 60), seconds: total % 60 };
+}
+
+function durationValue(minutes, seconds) {
+  const m = Math.max(0, parseInt(minutes, 10) || 0);
+  const s = Math.min(59, Math.max(0, parseInt(seconds, 10) || 0));
+  return `${m}:${String(s).padStart(2, "0")}`;
 }
 function paceSeconds(distance, timeStr) {
   const d = parseFloat(String(distance).replace(",", "."));
@@ -339,7 +396,7 @@ function fmtPace(perKm) {
 
 /* Afgeleide statistieken uit de log */
 function computeStats() {
-  let done = 0, km = 0, maxDist = 0, maxTime = 0, bestPace = 0, raceDone = false;
+  let done = 0, km = 0, maxDist = 0, maxTime = 0, bestPace = 0, raceDone = false, tenKDone = false, tenKSub55 = false;
   flatSessions.forEach((s) => {
     const e = log[sid(s.week, s.day)];
     if (!e || !e.done) return;
@@ -351,6 +408,10 @@ function computeStats() {
     if (t > maxTime) maxTime = t;
     const p = paceSeconds(e.distance, e.time);
     if (p && (bestPace === 0 || p < bestPace)) bestPace = p;
+    if (s.week === 18 && s.day === "zo") {
+      tenKDone = true;
+      tenKSub55 = t > 0 && t < 55 * 60;
+    }
     if (s.week === TOTAL_WEEKS && s.day === "zo") raceDone = true;
   });
   let streak = 0, run = 0;
@@ -362,7 +423,7 @@ function computeStats() {
   PLAN.forEach((w) => {
     if (w.sessions.every((s) => log[sid(w.week, s.day)]?.done)) fullWeeks++;
   });
-  return { done, total: totalSessions, km, maxDist, maxTime, bestPace, raceDone, streak, fullWeeks };
+  return { done, total: totalSessions, km, maxDist, maxTime, bestPace, raceDone, tenKDone, tenKSub55, streak, fullWeeks };
 }
 
 function currentWeek() {
@@ -460,6 +521,61 @@ function renderNextUp() {
   box.querySelector(".nextup-card").addEventListener("click", () => openDetail(next.week, next.day));
 }
 
+const PLANNING_META = {
+  race: {
+    icon: "🏁", label: "Tussentijdse race",
+    advice: "Laat deze race je lange training vervangen. Houd de training ervoor rustig en plan daarna minimaal één hersteldag.",
+  },
+  vacation: {
+    icon: "🌴", label: "Vakantie",
+    advice: "Gemiste trainingen hoef je niet in te halen. Pak bij thuiskomst de eerstvolgende rustige training op.",
+  },
+  rest: {
+    icon: "🩹", label: "Rust / blessure",
+    advice: "Herstel gaat voor het schema. Hervat pas pijnvrij en bouw de eerste week extra rustig op.",
+  },
+};
+
+function formatPlanDate(value) {
+  if (!value) return "";
+  const date = new Date(`${value}T12:00:00`);
+  return date.toLocaleDateString("nl-NL", { day: "numeric", month: "short", year: "numeric" });
+}
+
+function renderPlanning() {
+  const list = $("planningList");
+  if (!list) return;
+  const entries = [...planningEntries()].sort((a, b) => a.start.localeCompare(b.start));
+  if (!entries.length) {
+    list.innerHTML = `<div class="planning-empty"><span>🗓️</span><p>Nog niets gepland. Voeg een vakantie of oefenwedstrijd toe zodra je die weet.</p></div>`;
+    return;
+  }
+  list.innerHTML = entries.map((entry) => {
+    const meta = PLANNING_META[entry.type] || PLANNING_META.rest;
+    const period = entry.end && entry.end !== entry.start
+      ? `${formatPlanDate(entry.start)} – ${formatPlanDate(entry.end)}`
+      : formatPlanDate(entry.start);
+    return `<article class="planning-item plan-${entry.type}">
+      <span class="planning-icon">${meta.icon}</span>
+      <div class="planning-copy">
+        <span class="planning-type">${meta.label} · ${period}</span>
+        <strong>${escapeHtml(entry.title)}</strong>
+        ${entry.note ? `<p>${escapeHtml(entry.note)}</p>` : ""}
+        <p class="planning-advice"><b>Coachadvies:</b> ${meta.advice}</p>
+      </div>
+      <button class="planning-remove" type="button" data-plan-id="${escapeHtml(entry.id)}" aria-label="${escapeHtml(entry.title)} verwijderen">×</button>
+    </article>`;
+  }).join("");
+  list.querySelectorAll(".planning-remove").forEach((button) => {
+    button.addEventListener("click", () => {
+      log.__planning = planningEntries().filter((entry) => entry.id !== button.dataset.planId);
+      saveLog();
+      renderAll();
+      toast("Uit je planning verwijderd");
+    });
+  });
+}
+
 function renderZones() {
   $("zonesList").innerHTML = ZONES.map((z) => `
     <div class="zone-row zone-${z.key}">
@@ -476,7 +592,7 @@ function renderChart() {
     const doneMin = w.sessions.reduce((n, s) => n + (log[sid(w.week, s.day)]?.done ? s.min : 0), 0);
     const h = Math.round((planned / max) * 100);
     const fill = planned ? Math.round((doneMin / planned) * 100) : 0;
-    const cls = w.race ? "is-race" : w.recovery ? "is-rest" : "";
+    const cls = (w.race || w.tuneup) ? "is-race" : w.recovery ? "is-rest" : "";
     return `
       <div class="bar ${cls}" title="Week ${w.week}: ${planned} min gepland">
         <div class="bar-track" style="height:${h}%">
@@ -489,6 +605,7 @@ function renderChart() {
 
 function tagOf(w) {
   if (w.race) return `<span class="week-tag tag-race">Raceweek</span>`;
+  if (w.tuneup) return `<span class="week-tag tag-tuneup">10 km race</span>`;
   if (w.recovery) return `<span class="week-tag tag-rest">Herstel</span>`;
   if (w.taper) return `<span class="week-tag tag-taper">Taper</span>`;
   return "";
@@ -509,10 +626,15 @@ function renderWeeks() {
       if (pace) bits.push(pace);
       if (e.hr) bits.push(`${e.hr} bpm`);
       const logged = bits.length ? `<span class="session-logged">📊 ${bits.join(" · ")}</span>` : "";
+      const isRaceSession = s.day === "zo" && (w.tuneup || w.race);
+      const raceKicker = isRaceSession
+        ? `<span class="session-race-kicker">${w.race ? "🏅 Doelrace · 21,1 km" : "🏁 Raceday · 10 km"}</span>`
+        : "";
       return `
-        <button class="session zone-${s.zone} ${e.done ? "is-done" : ""} ${w.week === cw && s.day === todayCode ? "is-today" : ""}" data-week="${w.week}" data-day="${s.day}">
-          <span class="session-day">${s.dayLabel.slice(0, 2)}</span>
+        <button class="session zone-${s.zone} ${isRaceSession ? "is-race-session" : ""} ${e.done ? "is-done" : ""} ${w.week === cw && s.day === todayCode ? "is-today" : ""}" data-week="${w.week}" data-day="${s.day}">
+          <span class="session-day">${isRaceSession ? "<small>🏁</small>" : ""}${s.dayLabel.slice(0, 2)}</span>
           <span class="session-body">
+            ${raceKicker}
             <span class="session-title">${s.title}${w.week === cw && s.day === todayCode ? ' <span class="today-badge">Vandaag</span>' : ""}</span>
             <span class="session-meta">${s.min} min · ${s.kind}</span>
             ${logged}
@@ -520,12 +642,18 @@ function renderWeeks() {
           <span class="session-check">${e.done ? "✓" : ""}</span>
         </button>`;
     }).join("");
+    const weekPlans = planningForWeek(w.week);
+    const planStrip = weekPlans.length ? `<div class="week-planning">${weekPlans.map((entry) => {
+      const meta = PLANNING_META[entry.type] || PLANNING_META.rest;
+      return `<span>${meta.icon} ${escapeHtml(entry.title)}</span>`;
+    }).join("")}</div>` : "";
     html += `
-      <article class="week-card reveal ${w.week === cw ? "is-current" : ""} ${w.week < cw ? (w.sessions.every((x) => log[sid(w.week, x.day)]?.done) ? "is-complete" : "is-missed") : ""}" style="--i:${i % 4}">
+      <article class="week-card reveal ${w.tuneup ? "is-tuneup-week" : ""} ${w.race ? "is-goal-race-week" : ""} ${w.week === cw ? "is-current" : ""} ${w.week < cw ? (w.sessions.every((x) => log[sid(w.week, x.day)]?.done) ? "is-complete" : "is-missed") : ""}" style="--i:${i % 4}">
         <header class="week-head">
           <div><span class="week-no">Week ${w.week}</span><span class="week-dates">${w.dates}</span></div>
           ${w.week === cw ? `<span class="week-tag tag-now">Nu</span>` : w.week < cw ? (w.sessions.every((x) => log[sid(w.week, x.day)]?.done) ? `<span class="week-tag tag-done">✓ af</span>` : `<span class="week-tag tag-missed">gemist</span>`) : tagOf(w)}
         </header>
+        ${planStrip}
         <div class="session-list">${sess}</div>
       </article>`;
   });
@@ -574,6 +702,7 @@ function renderAll() {
   renderHero(stats);
   renderStats(stats);
   renderNextUp();
+  renderPlanning();
   renderChart();
   renderZones();
   renderWeeks();
@@ -590,6 +719,7 @@ function openDetail(week, day) {
   const id = sid(week, day);
   const e = log[id] || {};
   const z = zoneByKey[s.zone];
+  const enteredTime = durationParts(e.time);
 
   $("detailTitle").textContent = `Week ${week} · ${s.dayLabel}`;
   $("detailBody").innerHTML = `
@@ -625,16 +755,21 @@ function openDetail(week, day) {
       <h4>Invullen na de training</h4>
       <div class="form-grid">
         <label>Afstand (km)
-          <input id="fDistance" type="text" inputmode="decimal" placeholder="bv. 6,2" value="${e.distance ?? ""}">
+          <input id="fDistance" type="text" inputmode="decimal" placeholder="bv. 6,2" value="${escapeHtml(e.distance ?? "")}">
         </label>
-        <label>Tijd (mm:ss)
-          <input id="fTime" type="text" inputmode="numeric" placeholder="bv. 36:30" value="${e.time ?? ""}">
+        <label>Tijd
+          <span class="duration-input">
+            <input id="fTimeMinutes" type="number" inputmode="numeric" min="0" max="999" placeholder="36" value="${enteredTime.minutes || ""}" aria-label="Minuten">
+            <span>min</span>
+            <input id="fTimeSeconds" type="number" inputmode="numeric" min="0" max="59" placeholder="30" value="${enteredTime.seconds || ""}" aria-label="Seconden">
+            <span>sec</span>
+          </span>
         </label>
         <label class="full">Gemiddeld tempo
           <output id="fPace" class="pace-out">${fmtPace(paceSeconds(e.distance, e.time)) || "—"}</output>
         </label>
         <label>Hartslag (bpm)
-          <input id="fHr" type="number" inputmode="numeric" placeholder="bv. 152" value="${e.hr ?? ""}">
+          <input id="fHr" type="number" inputmode="numeric" placeholder="bv. 152" value="${escapeHtml(e.hr ?? "")}">
         </label>
         <label>Gevoel / zwaarte
           <select id="fFeel">
@@ -643,7 +778,7 @@ function openDetail(week, day) {
           </select>
         </label>
         <label class="full">Notitie
-          <textarea id="fNote" rows="2" placeholder="Hoe ging het?">${e.note ?? ""}</textarea>
+          <textarea id="fNote" rows="2" placeholder="Hoe ging het?">${escapeHtml(e.note ?? "")}</textarea>
         </label>
       </div>
     </section>
@@ -653,14 +788,22 @@ function openDetail(week, day) {
       <button id="saveSession" class="btn-ghost">Opslaan</button>
     </div>`;
 
-  const recalc = () => ($("fPace").textContent = fmtPace(paceSeconds($("fDistance").value, $("fTime").value)) || "—");
+  const readTime = () => {
+    if (!$("fTimeMinutes").value && !$("fTimeSeconds").value) return "";
+    return durationValue($("fTimeMinutes").value, $("fTimeSeconds").value);
+  };
+  const recalc = () => ($("fPace").textContent = fmtPace(paceSeconds($("fDistance").value, readTime())) || "—");
   $("fDistance").addEventListener("input", recalc);
-  $("fTime").addEventListener("input", () => { $("fTime").value = autoTime($("fTime").value); recalc(); });
+  $("fTimeMinutes").addEventListener("input", recalc);
+  $("fTimeSeconds").addEventListener("input", () => {
+    if (+$("fTimeSeconds").value > 59) $("fTimeSeconds").value = "59";
+    recalc();
+  });
 
   const collect = () => ({
     ...log[id],
     distance: $("fDistance").value.trim(),
-    time: $("fTime").value.trim(),
+    time: readTime(),
     hr: $("fHr").value.trim(),
     feel: $("fFeel").value,
     note: $("fNote").value.trim(),
@@ -675,7 +818,10 @@ function openDetail(week, day) {
     const cur = collect();
     cur.done = !cur.done;
     log[id] = cur; saveLog();
-    if (cur.done) { celebrate(); toast(w.race ? "🏅 Finisher! Wat een prestatie, strijder!" : DONE[Math.floor(Math.random() * DONE.length)]); }
+    if (cur.done) {
+      celebrate();
+      toast(w.race ? "🏅 Finisher! Wat een prestatie, strijder!" : w.tuneup ? "🏁 Maastunnelloop voltooid — sterk gepacet!" : DONE[Math.floor(Math.random() * DONE.length)]);
+    }
     closeDetail();
   });
 
@@ -762,6 +908,43 @@ if ($("footCredit")) {
     `Coaching door ${CONFIG.coachName} · TikTok <strong>${CONFIG.coachHandle}</strong> 🏃‍♀️`;
 }
 
+function setPlanningForm(open) {
+  const form = $("planningForm");
+  const toggle = $("togglePlanningForm");
+  form.classList.toggle("hidden", !open);
+  toggle.setAttribute("aria-expanded", String(open));
+  toggle.textContent = open ? "× Sluiten" : "＋ Toevoegen";
+  if (open && !$("planStart").value) $("planStart").value = isoDate(new Date());
+}
+
+$("togglePlanningForm").addEventListener("click", () => {
+  setPlanningForm($("planningForm").classList.contains("hidden"));
+});
+$("cancelPlanning").addEventListener("click", () => setPlanningForm(false));
+$("planningForm").addEventListener("submit", (event) => {
+  event.preventDefault();
+  const start = $("planStart").value;
+  const end = $("planEnd").value || start;
+  if (end < start) {
+    toast("De einddatum ligt vóór de startdatum");
+    return;
+  }
+  const entry = {
+    id: `plan-${Date.now()}`,
+    type: $("planType").value,
+    title: $("planTitle").value.trim(),
+    start,
+    end,
+    note: $("planNote").value.trim(),
+  };
+  log.__planning = [...planningEntries(), entry];
+  saveLog();
+  $("planningForm").reset();
+  setPlanningForm(false);
+  renderAll();
+  toast("Toegevoegd aan je schema 🗓️");
+});
+
 $("backButton").addEventListener("click", closeDetail);
 $("resetButton").addEventListener("click", () => {
   if (confirm("Alle ingevulde voortgang wissen?")) { log = {}; saveLog(); renderAll(); toast("Voortgang gewist"); }
@@ -774,6 +957,76 @@ function downloadJSON(filename, obj) {
   a.download = filename;
   document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
+function downloadText(filename, text, type) {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([text], { type }));
+  a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
+function icsEscape(value) {
+  return String(value || "")
+    .replaceAll("\\", "\\\\")
+    .replaceAll(/\r?\n/g, "\\n")
+    .replaceAll(",", "\\,")
+    .replaceAll(";", "\\;");
+}
+
+function icsDay(value) {
+  const date = typeof value === "string" ? new Date(`${value}T12:00:00`) : value;
+  return isoDate(date).replaceAll("-", "");
+}
+
+function addDays(value, amount) {
+  const date = typeof value === "string" ? new Date(`${value}T12:00:00`) : new Date(value);
+  date.setDate(date.getDate() + amount);
+  return date;
+}
+
+function calendarFile() {
+  const stamp = new Date().toISOString().replaceAll(/[-:]/g, "").replace(/\.\d{3}/, "");
+  const lines = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "CALSCALE:GREGORIAN",
+    "METHOD:PUBLISH",
+    "PRODID:-//bartlopen//Run Coach//NL",
+    `X-WR-CALNAME:${icsEscape(CONFIG.appName)} · ${icsEscape(RUNNER)}`,
+  ];
+  flatSessions.forEach((session) => {
+    const date = sessionDate(session.week, session.day);
+    const z = zoneByKey[session.zone];
+    lines.push(
+      "BEGIN:VEVENT",
+      `UID:${sid(session.week, session.day)}-${icsDay(date)}@bartlopen.nl`,
+      `DTSTAMP:${stamp}`,
+      `DTSTART;VALUE=DATE:${icsDay(date)}`,
+      `DTEND;VALUE=DATE:${icsDay(addDays(date, 1))}`,
+      `SUMMARY:${icsEscape(`🏃‍♀️ ${session.title}`)}`,
+      `DESCRIPTION:${icsEscape(`${session.min} min · ${z.name}\n${session.goal}\n\n${session.blocks.join("\n")}`)}`,
+      "TRANSP:TRANSPARENT",
+      "END:VEVENT",
+    );
+  });
+  planningEntries().forEach((entry) => {
+    const meta = PLANNING_META[entry.type] || PLANNING_META.rest;
+    lines.push(
+      "BEGIN:VEVENT",
+      `UID:${icsEscape(entry.id)}@bartlopen.nl`,
+      `DTSTAMP:${stamp}`,
+      `DTSTART;VALUE=DATE:${icsDay(entry.start)}`,
+      `DTEND;VALUE=DATE:${icsDay(addDays(entry.end || entry.start, 1))}`,
+      `SUMMARY:${icsEscape(`${meta.icon} ${entry.title}`)}`,
+      `DESCRIPTION:${icsEscape(`${entry.note ? `${entry.note}\n\n` : ""}Coachadvies: ${meta.advice}`)}`,
+      "TRANSP:TRANSPARENT",
+      "END:VEVENT",
+    );
+  });
+  lines.push("END:VCALENDAR");
+  return `${lines.join("\r\n")}\r\n`;
 }
 $("exportBtn").addEventListener("click", () => {
   downloadJSON(`${CONFIG.appName.replace(/\s+/g, "-")}-voortgang.json`, {
@@ -801,6 +1054,19 @@ $("importFile").addEventListener("change", (e) => {
     e.target.value = "";
   };
   reader.readAsText(file);
+});
+
+$("calendarBtn").addEventListener("click", () => {
+  downloadText("bartlopen-kim-schema.ics", calendarFile(), "text/calendar;charset=utf-8");
+  toast("Agenda-bestand staat klaar 🗓️");
+});
+
+$("pdfBtn").addEventListener("click", () => {
+  document.body.classList.add("print-schema");
+  const cleanup = () => document.body.classList.remove("print-schema");
+  window.addEventListener("afterprint", cleanup, { once: true });
+  window.print();
+  setTimeout(cleanup, 1500);
 });
 
 /* Alles tekenen */

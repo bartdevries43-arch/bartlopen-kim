@@ -4,17 +4,20 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Op naar 21,1K — bartlopen</title>
-    <meta name="description" content="Persoonlijk halve-marathonschema (van 0 naar 21,1 km) met coaching, stats en badges." />
+    <meta name="description" content="Kims persoonlijke hardloopschema: via de Maastunnelloop 10 km onder 55 minuten naar haar eerste halve marathon." />
     <meta name="theme-color" content="#0b0a0d" />
     <!-- Social preview (WhatsApp, Insta, etc.) -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="bartlopen Run Coach" />
     <meta property="og:title" content="Op naar 21,1K — voor Kim" />
-    <meta property="og:description" content="Kim gaat van 0 naar haar eerste halve marathon (Maassluis, jan 2027). 28 weken coaching, stats & badges van @bartlopen. Zet 'm op, strijder!" />
+    <meta property="og:description" content="Van 0 via de Maastunnelloop 10 km naar Kims eerste halve marathon. Persoonlijke coaching van @bartlopen." />
     <meta property="og:url" content="https://bartdevries43-arch.github.io/bartlopen-kim/" />
-    <meta property="og:image" content="https://bartdevries43-arch.github.io/bartlopen-kim/og-image.png" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
+    <meta property="og:image" content="https://bartdevries43-arch.github.io/bartlopen-kim/bartlopen-runcoach.png" />
+    <meta property="og:image:secure_url" content="https://bartdevries43-arch.github.io/bartlopen-kim/bartlopen-runcoach.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="500" />
+    <meta property="og:image:height" content="500" />
+    <meta property="og:image:alt" content="bartlopen Run Coach — Coach Bart" />
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="manifest" href="manifest.json" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
@@ -22,7 +25,7 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Op naar 21,1K" />
-    <link rel="stylesheet" href="styles.css?v=1" />
+    <link rel="stylesheet" href="styles.css?v=7" />
   </head>
   <body>
     <div id="splash" class="splash" aria-hidden="true">
@@ -66,8 +69,9 @@
                 <svg viewBox="0 0 120 120" class="ring">
                   <defs>
                     <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
-                      <stop offset="0" stop-color="#ff9a3d" />
-                      <stop offset="1" stop-color="#ff2d78" />
+                      <stop offset="0" stop-color="#9fdcf4" />
+                      <stop offset="0.55" stop-color="#f3a6c8" />
+                      <stop offset="1" stop-color="#c9b4f4" />
                     </linearGradient>
                   </defs>
                   <circle class="ring-bg" cx="60" cy="60" r="52" />
@@ -75,6 +79,10 @@
                 </svg>
                 <div class="ring-label"><strong id="ringPct">0%</strong><span>klaar</span></div>
               </div>
+            </div>
+            <div class="hero-subgoal">
+              <span>🏁 Tussendoel · 8 november 2026</span>
+              <strong>Maastunnelloop 10 km · samen naar sub-55</strong>
             </div>
           </section>
 
@@ -88,6 +96,46 @@
 
           <!-- Volgende training -->
           <section class="nextup reveal" id="nextUp"></section>
+
+          <!-- Persoonlijke planning: vakanties en tussentijdse races -->
+          <section class="panel planning-panel reveal" id="planningPanel">
+            <div class="planning-head">
+              <div>
+                <p class="section-kicker">Flexibel schema</p>
+                <h3>Jouw planning</h3>
+                <p>Voeg een vakantie of tussentijdse race toe. Je ziet meteen wat dat voor je trainingsweek betekent.</p>
+              </div>
+              <button class="btn-add" id="togglePlanningForm" type="button" aria-expanded="false" aria-controls="planningForm">＋ Toevoegen</button>
+            </div>
+            <div id="planningList" class="planning-list"></div>
+            <form id="planningForm" class="planning-form hidden">
+              <div class="form-grid">
+                <label>Type
+                  <select id="planType">
+                    <option value="race">🏁 Tussentijdse race</option>
+                    <option value="vacation">🌴 Vakantie</option>
+                    <option value="rest">🩹 Rust / blessure</option>
+                  </select>
+                </label>
+                <label>Naam
+                  <input id="planTitle" type="text" maxlength="60" placeholder="bv. 10 km Rotterdam" required />
+                </label>
+                <label>Vanaf
+                  <input id="planStart" type="date" required />
+                </label>
+                <label>Tot en met
+                  <input id="planEnd" type="date" />
+                </label>
+                <label class="full">Notitie
+                  <textarea id="planNote" rows="2" maxlength="180" placeholder="Wat wil je onthouden?"></textarea>
+                </label>
+              </div>
+              <div class="planning-actions">
+                <button class="btn-primary" type="submit">Bewaar in schema</button>
+                <button class="btn-ghost" id="cancelPlanning" type="button">Annuleren</button>
+              </div>
+            </form>
+          </section>
 
           <!-- Weekvolume-grafiek -->
           <section class="panel reveal">
@@ -134,7 +182,10 @@
           <div class="data-row">
             <button class="btn-ghost" id="exportBtn" type="button">⬇︎ Back-up opslaan</button>
             <button class="btn-ghost" id="importBtn" type="button">⬆︎ Back-up laden</button>
+            <button class="btn-ghost" id="pdfBtn" type="button">▤ Schema als PDF</button>
+            <button class="btn-ghost" id="calendarBtn" type="button">🗓 Agenda-bestand</button>
           </div>
+          <p class="data-note data-note-bottom">Het agenda-bestand werkt met Apple Agenda, Google Agenda en Android. Kies bij PDF voor ‘Bewaar als PDF’ in het afdrukvenster.</p>
           <input id="importFile" type="file" accept="application/json,.json" hidden />
         </section>
         <p class="foot-credit" id="footCredit">Coaching door Coach Bart · TikTok <strong>@bartlopen</strong> 🏃‍♀️</p>
@@ -143,6 +194,6 @@
 
     <div id="toast" class="toast" aria-live="polite"></div>
 
-    <script src="app.js?v=1"></script>
+    <script src="app.js?v=7"></script>
   </body>
 </html>
