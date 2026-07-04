@@ -217,7 +217,7 @@ const PLAN = [
   ]},
   { week: 18, dates: "2–8 nov", phase: "Fase 3 · Naar sub-55 in de Maastunnelloop", tuneup: true, sessions: [
     wo({ zone: "duur", min: 28, title: "Raceweek: loslopen + 4 prikkels", goal: "Frisse benen met even het wedstrijdritme voelen", blocks: ["18 min heel rustig, RPE 3", "4×1 min op ongeveer 5:30/km", "Steeds 90 sec heel rustig dribbelen", "Kort uitlopen — stop terwijl het makkelijk voelt"] }),
-    zo({ zone: "tienkm", min: 75, title: "🏁 Maastunnelloop · 10 km", goal: "Met Bart als pacer richting sub-55", kind: "Tussendoelrace", blocks: ["10–12 min rustig inlopen en een paar korte versnellingen", "Km 1–2: gecontroleerd op circa 5:32/km", "Km 3–8: samen met Bart zo vlak mogelijk rond 5:28–5:30/km", "Km 9–10: op gevoel versnellen als er nog ruimte is", "Doel: onder 55:00, maar een sterke gelijkmatige race gaat voor", "10 min rustig uitlopen en goed herstellen"] }),
+    zo({ zone: "tienkm", min: 75, title: "🏁 Maastunnelloop · 10 km", goal: "Met Bart als pacer richting sub-55", kind: "Tussendoelrace", why: "Dit is je tussendoel: 10 kilometer door Rotterdam, met Bart als pacer richting sub-55. Alle korte tempoblokken van de afgelopen weken komen hier samen. Open gecontroleerd, laat Bart het tempo bewaken en geniet ervan — een sterke, gelijkmatige race is belangrijker dan de exacte tijd. Daarna verschuift de focus weer volledig naar je halve marathon.", blocks: ["10–12 min rustig inlopen en een paar korte versnellingen", "Km 1–2: gecontroleerd op circa 5:32/km", "Km 3–8: samen met Bart zo vlak mogelijk rond 5:28–5:30/km", "Km 9–10: op gevoel versnellen als er nog ruimte is", "Doel: onder 55:00, maar een sterke gelijkmatige race gaat voor", "10 min rustig uitlopen en goed herstellen"] }),
   ]},
   /* ---- Fase 4 · Van 10 km naar de Halve ---- */
   { week: 19, dates: "9–15 nov", phase: "Fase 4 · Van 10 km naar de Halve", recovery: true, sessions: [
@@ -260,7 +260,7 @@ const PLAN = [
   ]},
   { week: 28, dates: "11–17 jan", phase: "Fase 5 · Piek, taper & race", taper: true, race: true, sessions: [
     wo({ zone: "duur", min: 15, title: "Laatste losse loop voor de race", goal: "Benen los, hoofd rustig", blocks: ["15 min heel soepel, RPE 2-3", "Niets meer bewijzen — je hebt het werk al gedaan"] }),
-    zo({ zone: "doel", min: 150, title: "🏁 Halve Maassluis", goal: "Doelrace · 21,1 km uitlopen", kind: "Doelrace", blocks: ["Eerste paar kilometer bewust rustig starten", "Zoek daarna je eigen duurzame ritme, RPE 5-6", "Geniet van het publiek in Maassluis", "Laatste kilometers op gevoel — en trots zijn op wat je hebt opgebouwd"] }),
+    zo({ zone: "doel", min: 150, title: "🏁 Halve Maassluis", goal: "Doelrace · 21,1 km uitlopen", kind: "Doelrace", why: "Dit is waar je een half jaar naartoe hebt gewerkt: 21,1 kilometer. De lange duurlopen, het HM-tempo en de mentale kilometers zitten in je benen. Start bewust rustig, zoek je eigen duurzame ritme en vertrouw op je opbouw — dit is jouw dag, strijder.", blocks: ["Eerste paar kilometer bewust rustig starten", "Zoek daarna je eigen duurzame ritme, RPE 5-6", "Geniet van het publiek in Maassluis", "Laatste kilometers op gevoel — en trots zijn op wat je hebt opgebouwd"] }),
   ]},
 ];
 
@@ -613,7 +613,7 @@ function tagOf(w) {
 
 function renderWeeks() {
   const cw = currentWeek();
-  const todayCode = ["zo", "ma", "di", "wo", "do", "vr", "za"][new Date().getDay()];
+  const todayIso = isoDate(new Date());
   let html = "", lastPhase = "";
   PLAN.forEach((w, i) => {
     if (w.phase !== lastPhase) { html += `<h4 class="sub-phase reveal">${w.phase}</h4>`; lastPhase = w.phase; }
@@ -627,15 +627,16 @@ function renderWeeks() {
       if (e.hr) bits.push(`${e.hr} bpm`);
       const logged = bits.length ? `<span class="session-logged">📊 ${bits.join(" · ")}</span>` : "";
       const isRaceSession = s.day === "zo" && (w.tuneup || w.race);
+      const isToday = isoDate(sessionDate(w.week, s.day)) === todayIso;
       const raceKicker = isRaceSession
         ? `<span class="session-race-kicker">${w.race ? "🏅 Doelrace · 21,1 km" : "🏁 Raceday · 10 km"}</span>`
         : "";
       return `
-        <button class="session zone-${s.zone} ${isRaceSession ? "is-race-session" : ""} ${e.done ? "is-done" : ""} ${w.week === cw && s.day === todayCode ? "is-today" : ""}" data-week="${w.week}" data-day="${s.day}">
+        <button class="session zone-${s.zone} ${isRaceSession ? "is-race-session" : ""} ${e.done ? "is-done" : ""} ${isToday ? "is-today" : ""}" data-week="${w.week}" data-day="${s.day}">
           <span class="session-day">${isRaceSession ? "<small>🏁</small>" : ""}${s.dayLabel.slice(0, 2)}</span>
           <span class="session-body">
             ${raceKicker}
-            <span class="session-title">${s.title}${w.week === cw && s.day === todayCode ? ' <span class="today-badge">Vandaag</span>' : ""}</span>
+            <span class="session-title">${s.title}${isToday ? ' <span class="today-badge">Vandaag</span>' : ""}</span>
             <span class="session-meta">${s.min} min · ${s.kind}</span>
             ${logged}
           </span>
@@ -742,8 +743,8 @@ function openDetail(week, day) {
     </div>
 
     <section class="detail-block why">
-      <h4>Waarom deze training</h4>
-      <p>${WHY[s.zone] || ""}</p>
+      <h4>${w.race || w.tuneup ? "Waarom deze wedstrijd" : "Waarom deze training"}</h4>
+      <p>${s.why || WHY[s.zone] || ""}</p>
     </section>
 
     <section class="detail-block">
@@ -752,7 +753,7 @@ function openDetail(week, day) {
     </section>
 
     <section class="detail-block">
-      <h4>Invullen na de training</h4>
+      <h4>${w.race || w.tuneup ? "Invullen na de wedstrijd" : "Invullen na de training"}</h4>
       <div class="form-grid">
         <label>Afstand (km)
           <input id="fDistance" type="text" inputmode="decimal" placeholder="bv. 6,2" value="${escapeHtml(e.distance ?? "")}">
