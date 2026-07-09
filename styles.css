@@ -597,3 +597,19 @@ h1, h2, h3, h4, p { margin-top: 0; }
 /* Huidige week gemarkeerd in de weekgrafiek */
 .bar.is-now .bar-x { color: var(--volt); font-weight: 800; }
 .bar.is-now .bar-track { box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--volt) 55%, transparent); }
+
+/* ===== Extra's: begroeting, consistentie-stippen, records ===== */
+.hero-greeting { position: relative; margin: 0 0 8px; font-size: 0.86rem; font-weight: 700; color: var(--ink); opacity: 0.92; }
+.consistency { margin: 6px 4px 0; }
+.consistency-head { display: flex; justify-content: space-between; align-items: baseline; margin: 0 2px 9px; }
+.consistency-head > span:first-child { font-size: 0.7rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.consistency-sub { font-size: 0.62rem; color: var(--muted); opacity: 0.85; }
+.cdots { display: flex; flex-wrap: wrap; gap: 5px; }
+.cdot { width: 9px; height: 9px; border-radius: 50%; transition: transform 0.2s var(--spring); }
+.cdot.is-done { background: var(--volt); }
+.cdot.is-missed { background: color-mix(in srgb, var(--muted) 45%, transparent); }
+.cdot.is-todo { background: transparent; box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--muted) 42%, transparent); }
+.records { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.record { display: flex; flex-direction: column; gap: 3px; padding: 14px; border-radius: 16px; background: var(--card-2); border: 1px solid var(--line); }
+.record-val { font-size: 1.2rem; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; color: var(--volt); }
+.record-label { font-size: 0.68rem; color: var(--muted); }
