@@ -27,6 +27,8 @@ const GOAL = CONFIG.goal;
 const START_DATE = CONFIG.startDate;
 const STORE_KEY = CONFIG.storeKey;
 const TOTAL_WEEKS = 28;
+const UNIT = "min";        // Kim stuurt op minuten (nodig voor de records-kaart)
+const UNIT_LABEL = "min";
 const COACH_INITIAL = (CONFIG.coachName.replace(/^coach\s+/i, "")[0] || "C").toUpperCase();
 
 /* --- Tempozones — tijd & RPE leidend, paces zijn indicatief --------- */
