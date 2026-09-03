@@ -204,7 +204,7 @@ const PLAN = [
     wo({ zone: "tienkm", min: 42, title: "3×1 km op beoogd 10 km-tempo", goal: "5:30/km gecontroleerd leren vasthouden", blocks: ["12 min rustig inlopen", "3×1 km op 5:30–5:35/km, RPE 7", "3 min rustig dribbelen tussen de kilometers", "8 min rustig uitlopen", "Stop het snelle werk als de loopvorm inzakt"] }),
     za({ zone: "lang", min: 50, title: "50 min rustig, frisheid voorop", goal: "Kortere duurloop zodat je uitgerust aan de start staat", blocks: ["50 min rustig, RPE 3-4", "Geen snelle finale: fris zijn is nu belangrijker dan minuten maken"] }),
   ]},
-  { week: 15, dates: "2–8 nov", phase: "Fase 3 · Naar sub-55 in de Maastunnelloop", tuneup: true, sessions: [
+  { week: 15, dates: "2–8 nov", phase: "Fase 3 · Naar sub-55 in de Maastunnelloop", tuneup: true, tuneupTag: "10 km race", sessions: [
     wo({ zone: "duur", min: 28, title: "Raceweek: loslopen + 4 prikkels", goal: "Frisse benen met even het wedstrijdritme voelen", blocks: ["18 min heel rustig, RPE 3", "4×1 min op ongeveer 5:30/km", "3×90 sec heel rustig dribbelen tussen de prikkels", "1–2 min rustig uitlopen; stop terwijl het makkelijk voelt"] }),
     zo({ zone: "tienkm", min: 75, title: "🏁 Maastunnelloop · 10 km", goal: "Met Bart als pacer richting sub-55", kind: "Tussendoelrace", why: "Dit is je tussendoel: 10 kilometer door Rotterdam, met Bart als pacer richting sub-55. Alle korte tempoblokken van de afgelopen weken komen hier samen. Open gecontroleerd, laat Bart het tempo bewaken en geniet ervan, een sterke, gelijkmatige race is belangrijker dan de exacte tijd. Daarna verschuift de focus weer volledig naar je halve marathon.", blocks: ["10–12 min rustig inlopen en een paar korte versnellingen", "Km 1–2: gecontroleerd op circa 5:32/km", "Km 3–8: samen met Bart zo vlak mogelijk rond 5:28–5:30/km", "Km 9–10: op gevoel versnellen als er nog ruimte is", "Doel: onder 55:00, maar een sterke gelijkmatige race gaat voor", "10 min rustig uitlopen en goed herstellen"] }),
   ]},
@@ -601,7 +601,7 @@ function renderChart() {
 
 function tagOf(w) {
   if (w.race) return `<span class="week-tag tag-race">Raceweek</span>`;
-  if (w.tuneup) return `<span class="week-tag tag-tuneup">10 km race</span>`;
+  if (w.tuneup) return `<span class="week-tag tag-tuneup">${w.tuneupTag || "Wedstrijd"}</span>`;
   if (w.recovery) return `<span class="week-tag tag-rest">Herstel</span>`;
   if (w.taper) return `<span class="week-tag tag-taper">Taper</span>`;
   return "";
