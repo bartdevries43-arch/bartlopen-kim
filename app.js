@@ -387,6 +387,17 @@ function fmtPace(perKm) {
 }
 
 /* Afgeleide statistieken uit de log */
+/* Tussendoelrace en slotsessie opzoeken i.p.v. vaste weeknummers, zodat het
+   ook klopt als het schema opnieuw wordt ingedeeld. */
+const TUNEUP_WEEK = PLAN.find((w) => w.tuneup);
+const TUNEUP_SESSION = TUNEUP_WEEK
+  ? { week: TUNEUP_WEEK.week, day: TUNEUP_WEEK.sessions[TUNEUP_WEEK.sessions.length - 1].day }
+  : null;
+const LAST_SESSION = (() => {
+  const w = PLAN[PLAN.length - 1];
+  return { week: w.week, day: w.sessions[w.sessions.length - 1].day };
+})();
+
 function computeStats() {
   let done = 0, km = 0, maxDist = 0, maxTime = 0, bestPace = 0, raceDone = false, tenKDone = false, tenKSub55 = false;
   flatSessions.forEach((s) => {
@@ -400,11 +411,11 @@ function computeStats() {
     if (t > maxTime) maxTime = t;
     const p = paceSeconds(e.distance, e.time);
     if (p && (bestPace === 0 || p < bestPace)) bestPace = p;
-    if (s.week === 18 && s.day === "zo") {
+    if (TUNEUP_SESSION && s.week === TUNEUP_SESSION.week && s.day === TUNEUP_SESSION.day) {
       tenKDone = true;
       tenKSub55 = t > 0 && t < 55 * 60;
     }
-    if (s.week === TOTAL_WEEKS && s.day === "zo") raceDone = true;
+    if (s.week === LAST_SESSION.week && s.day === LAST_SESSION.day) raceDone = true;
   });
   let streak = 0, run = 0;
   flatSessions.forEach((s) => {
